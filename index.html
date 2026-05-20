@@ -235,13 +235,6 @@
       line-height: 1.6;
     }
 
-    /* Admin */
-    .admin-section {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-    }
 
     .form-group { margin-bottom: 14px; }
 
@@ -349,17 +342,26 @@
     <h1 class="page-title">Actualités</h1>
     <p class="page-subtitle">Ne rate aucun des prochains évènements dans la région.</p>
     <div id="news-list">
-      
+
       <div class="news-item">
-        <div class="news-meta"><i class="ti ti-calendar" style="font-size:13px;"></i> 24-26 juillet 2026</div>
-        <div class="news-title">Stéréoparc Festival 2026</div>
-        <div class="news-body">À l’occasion de ce weekend inoubliable, les jardins de la Corderie Royale de Rochefort se métamorphosent en véritable dancefloor. Ce cadre exceptionnel, ces remparts grandioses, ce jardin ponctué de palmiers en bord de Charente t’offrent un terrain de jeu insolite pour vivre l’aventure electro de ton été. Techno, Hard Techno, EDM, House,Tech House … à toi de découvrir où t’emmèneront les soirées WATERFALL et COCOCOAST et vis une fête exceptionnelle. Alors n’attends plus pour monter à bord de la 7ème édition de STEREOPARC !</div>
+        <div class="news-meta"><i class="ti ti-calendar" style="font-size:13px;"></i> 24–25 juillet 2026</div>
+        <div class="news-title">Stéréoparc — 7ème édition <a href="https://stereoparc.com/" target="_blank" style="margin-left:8px; font-size:12px; color:var(--accent); text-decoration:none; font-weight:500;">↗ stereoparc.com</a></div>
+        <div class="news-body">À l'occasion de ce weekend inoubliable, les jardins de la Corderie Royale de Rochefort se métamorphosent en véritable dancefloor. Ce cadre exceptionnel, ces remparts grandioses, ce jardin ponctué de palmiers en bord de Charente t'offrent un terrain de jeu insolite pour vivre l'aventure electro de ton été. Techno, Hard Techno, EDM, House, Tech House… Alors n'attends plus pour monter à bord !</div>
       </div>
-      
+
       <div class="news-item">
-        <div class="news-meta"><i class="ti ti-calendar" style="font-size:13px;"></i> 15 mai 2026</div>
-        <div class="news-title">Génération 80 au Shapers Club House</div>
-        <div class="news-body">Le Shapers Club House change d’époque le temps d’une soirée. Direction les années 80 : synthés, funk, disco et tubes incontournables, le tout dans une ambiance festive assumée.</div>
+        <div class="news-meta"><i class="ti ti-calendar" style="font-size:13px;"></i> 22 mai 2026</div>
+        <div class="news-title">Deus Party au Shapers Club House <a href="https://bar.shapersclub.com/evenement/deus-party/" target="_blank" style="margin-left:8px; font-size:12px; color:var(--accent); text-decoration:none; font-weight:500;">↗ Infos & réservation</a></div>
+        <div class="news-body">Deus Ex Machina investit le Shapers Club House pour une soirée entre découverte, musique et good vibes. Dès 19h, viens découvrir la dernière collection autour d'un moment chill avec snacks & drinks, avant de basculer sur un DJ set qui fera monter l'ambiance.</div>
+      </div>
+
+      <div class="news-item" style="opacity:0.55;">
+        <div class="news-meta"><i class="ti ti-calendar" style="font-size:13px;"></i> 15 mai 2026 &nbsp;<span class="badge badge-warn">Événement passé</span></div>
+        <div class="news-title">Génération 80 au Shapers Club House <a href="https://bar.shapersclub.com/evenement/generation-80/" target="_blank" style="margin-left:8px; font-size:12px; color:var(--accent); text-decoration:none; font-weight:500;">↗ Infos</a></div>
+        <div class="news-body">Le Shapers Club House a changé d'époque le temps d'une soirée. Direction les années 80 : synthés, funk, disco et tubes incontournables, le tout dans une ambiance festive assumée.</div>
+      </div>
+
+    </div>
       </div>
       
     </div>
@@ -543,13 +545,6 @@
 </main>
 
 <script>
-  const ADMIN_HASH = 'ca37b175f826f9f5765ce6e6ec6d2640b8ccf392667210cdb446f40e15beb7f4';
-
-  async function hashString(str) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-  }
-
   function showTab(id, btn) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -560,109 +555,6 @@
   function toggleCard(card) {
     card.classList.toggle('open');
   }
-
-  async function checkPwd() {
-    const val = document.getElementById('pwd-input').value;
-    const alertEl = document.getElementById('alert-login');
-    const hashed = await hashString(val);
-    if (hashed === ADMIN_HASH) {
-      document.getElementById('gate').style.display = 'none';
-      document.getElementById('admin-panel').style.display = 'block';
-      renderAdminList();
-    } else {
-      alertEl.style.display = 'block';
-      setTimeout(() => alertEl.style.display = 'none', 3000);
-    }
-  }
-
-  function logout() {
-    document.getElementById('gate').style.display = 'block';
-    document.getElementById('admin-panel').style.display = 'none';
-    document.getElementById('pwd-input').value = '';
-  }
-
-  function getNews() {
-    try { return JSON.parse(localStorage.getItem('guide_news') || '[]'); } catch { return []; }
-  }
-
-  function saveNews(list) {
-    localStorage.setItem('guide_news', JSON.stringify(list));
-  }
-
-  function addNews() {
-    const t = document.getElementById('news-title-input').value.trim();
-    const b = document.getElementById('news-body-input').value.trim();
-    if (!t || !b) return;
-    const today = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-    const list = getNews();
-    list.unshift({ date: today, title: t, body: b, id: Date.now() });
-    saveNews(list);
-    document.getElementById('news-title-input').value = '';
-    document.getElementById('news-body-input').value = '';
-    renderNewsFeed();
-    renderAdminList();
-    const alertEl = document.getElementById('alert-pub');
-    alertEl.style.display = 'flex';
-    alertEl.style.alignItems = 'center';
-    alertEl.style.gap = '6px';
-    setTimeout(() => alertEl.style.display = 'none', 3000);
-  }
-
-  function deleteNews(id) {
-    const list = getNews().filter(n => n.id !== id);
-    saveNews(list);
-    renderNewsFeed();
-    renderAdminList();
-  }
-
-  function renderNewsFeed() {
-    const list = getNews();
-    const container = document.getElementById('news-list');
-    const stored = list.map(n => `
-      <div class="news-item">
-        <div class="news-meta"><i class="ti ti-calendar" style="font-size:13px;"></i> ${n.date}</div>
-        <div class="news-title">${n.title}</div>
-        <div class="news-body">${n.body}</div>
-      </div>`).join('');
-    const fixed = `
-      <div class="news-item">
-        <div class="news-meta"><i class="ti ti-calendar" style="font-size:13px;"></i> 24–25 juillet 2026</div>
-        <div class="news-title">Stéréoparc — 7ème édition <a href="https://stereoparc.com/" target="_blank" style="margin-left:8px; font-size:12px; color:var(--accent); text-decoration:none; font-weight:500;">↗ stereoparc.com</a></div>
-        <div class="news-body">À l\'occasion de ce weekend inoubliable, les jardins de la Corderie Royale de Rochefort se métamorphosent en véritable dancefloor. Techno, Hard Techno, EDM, House, Tech House… Alors n\'attends plus pour monter à bord !</div>
-      </div>
-      <div class="news-item">
-        <div class="news-meta"><i class="ti ti-calendar" style="font-size:13px;"></i> 22 mai 2026</div>
-        <div class="news-title">Deus Party au Shapers Club House <a href="https://bar.shapersclub.com/evenement/deus-party/" target="_blank" style="margin-left:8px; font-size:12px; color:var(--accent); text-decoration:none; font-weight:500;">↗ Infos & réservation</a></div>
-        <div class="news-body">Deus Ex Machina investit le Shapers Club House pour une soirée entre découverte, musique et good vibes.</div>
-      </div>
-      <div class="news-item" style="opacity:0.55;">
-        <div class="news-meta"><i class="ti ti-calendar" style="font-size:13px;"></i> 15 mai 2026 &nbsp;<span class="badge badge-warn">Événement passé</span></div>
-        <div class="news-title">Génération 80 au Shapers Club House <a href="https://bar.shapersclub.com/evenement/generation-80/" target="_blank" style="margin-left:8px; font-size:12px; color:var(--accent); text-decoration:none; font-weight:500;">↗ Infos</a></div>
-        <div class="news-body">Direction les années 80 : synthés, funk, disco et tubes incontournables au Shapers Club House.</div>
-      </div>`;
-    container.innerHTML = stored + fixed;
-  }
-
-  function renderAdminList() {
-    const list = getNews();
-    const container = document.getElementById('admin-news-list');
-    if (list.length === 0) {
-      container.innerHTML = '<div class="empty-state"><i class="ti ti-news-off"></i><p>Aucune actualité publiée via l\'admin.</p></div>';
-      return;
-    }
-    container.innerHTML = list.map(n => `
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; padding: 10px 0; border-bottom: 1px solid var(--border);">
-        <div>
-          <div style="font-size:14px; font-weight:500;">${n.title}</div>
-          <div style="font-size:12px; color:var(--text-faint);">${n.date}</div>
-        </div>
-        <button class="btn btn-secondary" style="font-size:12px; padding:5px 10px; flex-shrink:0; margin-left:12px;" onclick="event.stopPropagation(); deleteNews(${n.id})">
-          <i class="ti ti-trash"></i> Supprimer
-        </button>
-      </div>`).join('');
-  }
-
-  renderNewsFeed();
 </script>
 </body>
 </html>
