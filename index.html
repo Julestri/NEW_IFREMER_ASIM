@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bienvenue à ASIM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f3ee;
+      --surface: #ffffff;
+      --border: rgba(0,0,0,0.1);
+      --border-strong: rgba(0,0,0,0.18);
+      --text: #1a1814;
+      --text-muted: #6b6760;
+      --text-faint: #a09d98;
+      --accent: #2d5a3d;
+      --accent-light: #e8f0ea;
+      --accent-text: #1e3f2b;
+      --warn: #8a5c1a;
+      --warn-light: #fdf0dc;
+      --info: #1a4a7a;
+      --info-light: #e8eef7;
+      --radius: 10px;
+      --radius-lg: 16px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 26px;
+      color: var(--text);
+    }
+
+    nav { display: flex; gap: 4px; }
+
+    .nav-btn {
+      padding: 6px 14px;
+      border-radius: var(--radius);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .nav-btn:hover { background: var(--bg); color: var(--text); }
+    .nav-btn.active { background: var(--accent-light); color: var(--accent-text); font-weight: 500; }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .section { display: none; animation: fadeIn 0.2s ease; }
+    .section.active { display: block; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .page-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Cartes cliquables */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .card:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(45,90,61,0.08); }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0;
+    }
+
+    .card-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title i { font-size: 16px; color: var(--accent); }
+
+    .card-chevron {
+      font-size: 16px;
+      color: var(--text-faint);
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+
+    .card.open .card-chevron { transform: rotate(180deg); }
+
+    .card-summary {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .card-detail {
+      display: none;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .card.open .card-detail { display: block; }
+
+    .card-detail p { margin-bottom: 8px; }
+    .card-detail p:last-child { margin-bottom: 0; }
+    .card-detail strong { color: var(--text); font-weight: 600; }
+
+    .badge {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      flex-shrink: 0;
+    }
+
+    .badge-success { background: var(--accent-light); color: var(--accent-text); }
+    .badge-info { background: var(--info-light); color: var(--info); }
+    .badge-warn { background: var(--warn-light); color: var(--warn); }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+    }
+
+    /* News */
+    .news-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 12px;
+      position: relative;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .news-item:hover { border-color: var(--accent); }
+
+    .news-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 20px; bottom: 20px;
+      width: 3px;
+      background: var(--accent);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .news-meta {
+      font-size: 12px;
+      color: var(--text-faint);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .news-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .news-body {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+
+    .form-group { margin-bottom: 14px; }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    input[type="text"], input[type="password"], textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input:focus, textarea:focus { border-color: var(--accent); }
+    textarea { height: 90px; resize: vertical; }
+
+    .btn {
+      padding: 9px 20px;
+      border-radius: var(--radius);
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.15s;
+    }
+
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-text); }
+    .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--border-strong); }
+
+    .gate { text-align: center; padding: 2.5rem 1rem; }
+    .gate i { font-size: 32px; color: var(--text-faint); display: block; margin-bottom: 12px; }
+    .gate h3 { font-size: 17px; font-weight: 500; margin-bottom: 6px; }
+    .gate p { font-size: 13px; color: var(--text-muted); margin-bottom: 1.25rem; }
+
+    .alert {
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .alert-error { background: #fdecea; color: #b91c1c; }
+    .alert-success { background: var(--accent-light); color: var(--accent-text); }
+
+    .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 14px;
+    }
+
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+    .empty-state i { font-size: 36px; color: var(--text-faint); display: block; margin-bottom: 12px; }
+
+    @media (max-width: 600px) {
+      header { padding: 0 1rem; }
+      .header-inner { flex-direction: column; height: auto; padding: 1rem 0; gap: 10px; }
+      nav { flex-wrap: wrap; justify-content: center; }
+      main { padding: 1.25rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">Bienvenue à ASIM</div>
+    <nav>
+      <button class="nav-btn active" onclick="showTab('news', this)"><i class="ti ti-news"></i> Actualités</button>
+      <button class="nav-btn" onclick="showTab('activites', this)"><i class="ti ti-ticket"></i> Activités</button>
+      <button class="nav-btn" onclick="showTab('logement', this)"><i class="ti ti-home"></i> Logement</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ACTUALITÉS -->
+  
+  <div id="news" class="section active">
+    <h1 class="page-title">Actualités</h1>
+    <p class="page-subtitle">Ne rate aucun des prochains évènements dans la région.</p>
+    <div id="news-list">
+      
+      <div class="news-item">
+        <div class="news-meta"><i class="ti ti-calendar" style="font-size:13px;"></i> 24-26 juillet 2026</div>
+        <div class="news-title">Stéréoparc Festival 2026</div>
+        <div class="news-body">À l’occasion de ce weekend inoubliable, les jardins de la Corderie Royale de Rochefort se métamorphosent en véritable dancefloor. Ce cadre exceptionnel, ces remparts grandioses, ce jardin ponctué de palmiers en bord de Charente t’offrent un terrain de jeu insolite pour vivre l’aventure electro de ton été. Techno, Hard Techno, EDM, House,Tech House … à toi de découvrir où t’emmèneront les soirées WATERFALL et COCOCOAST et vis une fête exceptionnelle. Alors n’attends plus pour monter à bord de la 7ème édition de STEREOPARC !</div>
+      </div>
+      
+      <div class="news-item">
+        <div class="news-meta"><i class="ti ti-calendar" style="font-size:13px;"></i> 15 mai 2026</div>
+        <div class="news-title">Génération 80 au Shapers Club House</div>
+        <div class="news-body">Le Shapers Club House change d’époque le temps d’une soirée. Direction les années 80 : synthés, funk, disco et tubes incontournables, le tout dans une ambiance festive assumée.</div>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- ACTIVITÉS -->
+  
+  <div id="activites" class="section">
+    <h1 class="page-title">Activités</h1>
+    <p class="page-subtitle">Sorties, sport, culture...il y a forcément quelque chose pour vous.</p>
+    <div class="grid2">
+
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-header">
+          <div class="card-left">
+            <div class="card-title"><i class="ti ti-walk"></i> Sentier du Gardour</div>
+            <span class="badge badge-success">Gratuit</span>
+          </div>
+          <i class="ti ti-chevron-down card-chevron"></i>
+        </div>
+        <div class="card-summary">Sentier balisé dans la forêt de la Coubre</div>
+        <div class="card-detail">
+          <p>Les essences qui la composent sont essentiellement le pin maritime et le chêne vert, dans une moindre mesure le chêne pédonculé. La forêt de la Coubre abrite une faune variée avec notamment de grands ongulés sauvages comme le cerf élaphe, le chevreuil ou les très nombreux suidés, mais aussi plus furtivement, des espèces à fort intérêt patrimonial comme la trop rare Cistude, unique tortue d'eau douce autochtone...</p>
+          <p><strong>Accès :</strong> Parking au niveau de la ligne 13 et départ de l'autre côté de la route.</p>
+          <p><strong>Distance :</strong> 3.1 km</p>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-header">
+          <div class="card-left">
+            <div class="card-title"><i class="ti ti-swim"></i> Plage de l'Embellie</div>
+            <span class="badge badge-success">Gratuit</span>
+          </div>
+          <i class="ti ti-chevron-down card-chevron"></i>
+        </div>
+        <div class="card-summary">Plage de sable fin en bord de Gironde.</div>
+        <div class="card-detail">
+          <p>La <strong>Plage de l'Embellie</strong> est une plage de sable fin nichée au bord de l'estuaire de la Gironde, idéale pour une pause détente après le travail ou un weekend au soleil.</p>
+          <p><strong>Baignade :</strong> Surveillée en saison (juillet–août). Eaux calmes et peu profondes, parfaites pour les familles.</p>
+          <p><strong>Sur place :</strong> Aire de pique-nique, sanitaires, accès PMR. Location de planches et paddles disponible à proximité en été.</p>
+          <p><strong>Accès :</strong> Parking gratuit sur place. À une vingtaine de minutes en voiture depuis le laboratoire.</p>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-header">
+          <div class="card-left">
+            <div class="card-title"><i class="ti ti-fish"></i> Aquarium de La Rochelle</div>
+            <span class="badge badge-info">Tarif réduit</span>
+          </div>
+          <i class="ti ti-chevron-down card-chevron"></i>
+        </div>
+        <div class="card-summary">Un des plus grands aquariums d'Europe, à 30 min.</div>
+        <div class="card-detail">
+          <p>L'<strong>Aquarium de La Rochelle</strong> est l'un des plus grands aquariums d'Europe avec plus de 12 000 animaux marins et 600 espèces réparties sur 3 niveaux. Une plongée fascinante dans les océans du monde entier.</p>
+          <p><strong>Tarif réduit :</strong> Billet à tarif préférentiel sur présentation de votre badge ASIM à l'accueil.</p>
+          <p><strong>Horaires :</strong> Tous les jours de 9h à 20h en été, 10h à 18h hors saison.</p>
+          <p><strong>Accès :</strong> À environ 30 min en voiture. Parking payant à proximité du port.</p>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-header">
+          <div class="card-left">
+            <div class="card-title"><i class="ti ti-ball-football"></i> Sports collectifs</div>
+            <span class="badge badge-warn">Sur inscription</span>
+          </div>
+          <i class="ti ti-chevron-down card-chevron"></i>
+        </div>
+        <div class="card-summary">Foot et volleyball inter-entreprises.</div>
+        <div class="card-detail">
+          <p>Un club de <strong>football</strong> et un club de <strong>volleyball</strong> inter-entreprises sont actifs. Les matchs ont lieu le mercredi soir et le samedi matin.</p>
+          <p><strong>Inscription :</strong> Contactez l'équipe RH pour rejoindre et obtenir le planning de la saison.</p>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-header">
+          <div class="card-left">
+            <div class="card-title"><i class="ti ti-tools-kitchen-2"></i> Cours de cuisine</div>
+            <span class="badge badge-warn">Sur inscription</span>
+          </div>
+          <i class="ti ti-chevron-down card-chevron"></i>
+        </div>
+        <div class="card-summary">Atelier mensuel entre collègues.</div>
+        <div class="card-detail">
+          <p>Chaque dernier <strong>vendredi du mois</strong>, l'association des salariés organise un atelier cuisine suivi d'un déjeuner partagé.</p>
+          <p><strong>Lieu :</strong> Salle de réunion B2, cuisine équipée.</p>
+          <p><strong>Inscription :</strong> Via l'intranet ou auprès du référent associatif de votre équipe.</p>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-header">
+          <div class="card-left">
+            <div class="card-title"><i class="ti ti-music"></i> Vie culturelle</div>
+            <span class="badge badge-info">Tarif réduit</span>
+          </div>
+          <i class="ti ti-chevron-down card-chevron"></i>
+        </div>
+        <div class="card-summary">Billets concerts à -30%.</div>
+        <div class="card-detail">
+          <p>Partenariat avec la <strong>salle de concerts locale</strong> : billets disponibles à -30% du tarif public pour tous les salariés ASIM.</p>
+          <p><strong>Comment en profiter :</strong> Demandez le bon de réduction à l'accueil avant d'acheter vos billets en ligne ou sur place.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LOGEMENT -->
+  <div id="logement" class="section">
+    <h1 class="page-title">Logement</h1>
+    <p class="page-subtitle">Pour s'installer sereinement autour du labo — quelques pistes pour bien démarrer.</p>
+
+    <div class="card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-left">
+          <div class="card-title"><i class="ti ti-building-community"></i> La CARA — Logement saisonnier</div>
+          <span class="badge badge-success">Recommandé</span>
+        </div>
+        <i class="ti ti-chevron-down card-chevron"></i>
+      </div>
+      <div class="card-summary">Offre de logements saisonniers gérée par la communauté d'agglomération.</div>
+      <div class="card-detail">
+        <p>La <strong>Communauté d'Agglomération Royan Atlantique (CARA)</strong> propose une plateforme dédiée au logement saisonnier dans le secteur. C'est la ressource de référence pour trouver rapidement un hébergement à taille humaine, proche du laboratoire.</p>
+        <p><strong>Ce qu'on y trouve :</strong> Studios, T2 et chambres chez l'habitant disponibles à la semaine ou au mois, souvent à des tarifs plus accessibles que les plateformes classiques.</p>
+        <p><strong>Idéal pour :</strong> Les premiers mois d'installation, le temps de trouver un logement définitif ou d'explorer les quartiers.</p>
+        <p><a href="https://www.agglo-royan.fr/logement-saisonnier" target="_blank" style="color:var(--accent); font-weight:600; text-decoration:none;">↗ Voir les logements disponibles sur agglo-royan.fr</a></p>
+      </div>
+    </div>
+
+    <div class="card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-left">
+          <div class="card-title"><i class="ti ti-users"></i> Colocation</div>
+        </div>
+        <i class="ti ti-chevron-down card-chevron"></i>
+      </div>
+      <div class="card-summary">Plusieurs collègues cherchent ou proposent des colocations.</div>
+      <div class="card-detail">
+        <p>Un groupe de discussion interne réunit les salariés intéressés par la colocation ou souhaitant proposer une chambre.</p>
+        <p><strong>Comment rejoindre :</strong> Contactez les RH par email ou passez à l'accueil pour obtenir le lien d'accès au groupe.</p>
+      </div>
+    </div>
+
+    <div class="card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-left">
+          <div class="card-title"><i class="ti ti-calendar"></i> Logement temporaire</div>
+          <span class="badge badge-info">Disponible</span>
+        </div>
+        <i class="ti ti-chevron-down card-chevron"></i>
+      </div>
+      <div class="card-summary">2 studios disponibles à la semaine pour les nouveaux arrivants.</div>
+      <div class="card-detail">
+        <p>L'entreprise dispose de <strong>2 studios meublés</strong> réservés aux nouveaux arrivants le temps de trouver un logement définitif.</p>
+        <p><strong>Durée :</strong> Location possible à la semaine, jusqu'à 6 semaines maximum.</p>
+        <p><strong>Réservation :</strong> Directement auprès de l'accueil, sous réserve de disponibilité.</p>
+      </div>
+    </div>
+
+    <div class="card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-left">
+          <div class="card-title"><i class="ti ti-coins"></i> Aide au logement</div>
+        </div>
+        <i class="ti ti-chevron-down card-chevron"></i>
+      </div>
+      <div class="card-summary">Avance sur frais d'installation sous conditions.</div>
+      <div class="card-detail">
+        <p>Une <strong>avance sur frais d'installation</strong> (caution, premier loyer) est possible sous conditions d'ancienneté et de statut.</p>
+        <p><strong>Démarche :</strong> Demandez le formulaire de demande auprès de la comptabilité. Réponse sous 5 jours ouvrés.</p>
+        <p>N'oubliez pas également de vérifier vos droits à l'<strong>APL</strong> sur le site de la CAF.</p>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+
+
+
+  function showTab(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function toggleCard(card) {
+    card.classList.toggle('open');
+  }
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
