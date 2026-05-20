@@ -109,6 +109,7 @@
 
     /* Cartes cliquables */
     .card {
+      break-inside: avoid;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
@@ -185,10 +186,8 @@
     .badge-warn { background: var(--warn-light); color: var(--warn); }
 
     .grid2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      columns: 2;
       gap: 12px;
-      align-items: start;
     }
 
     /* News */
